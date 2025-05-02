@@ -15,15 +15,16 @@ router.post("/signup", async function (req, res) {
     }
 
     const hash = bcrypt.hashSync(password, 10);
+    const token =  uid2(32)
     const newUser = new User({
       firstname,
       username,
       password: hash,
-      token: uid2(32),
+      token: token,
     });
 
     await newUser.save();
-    return res.json({ result: true });
+    return res.json({ result: true, token  });
   } else {
     return res.json({ result: false, error: "Champ(s) manquant(s)" });
   }
