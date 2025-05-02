@@ -15,7 +15,7 @@ router.post("/signup", async function (req, res) {
     }
 
     const hash = bcrypt.hashSync(password, 10);
-    const token =  uid2(32)
+    const token = uid2(32);
     const newUser = new User({
       firstname,
       username,
@@ -24,7 +24,7 @@ router.post("/signup", async function (req, res) {
     });
 
     await newUser.save();
-    return res.json({ result: true, token  });
+    return res.json({ result: true, token, username, firstname });
   } else {
     return res.json({ result: false, error: "Champ(s) manquant(s)" });
   }
@@ -37,9 +37,17 @@ router.post("/signin", async (req, res) => {
     const existingUser = await User.findOne({ username });
 
     if (existingUser && bcrypt.compareSync(password, existingUser.password)) {
-      return res.json({ result: true, token: existingUser.token });
+      return res.json({
+        result: true,
+        token: existingUser.token,
+        username: existingUser.username,
+        firstname: existingUser.firstname,
+      });
     } else {
-      return res.json({ result: false, error: "Utilisateur non existant ou mauvais mot de passe" });
+      return res.json({
+        result: false,
+        error: "Utilisateur non existant ou mauvais mot de passe",
+      });
     }
   } else {
     return res.json({ result: false, error: "Champ(s) manquant(s)" });
