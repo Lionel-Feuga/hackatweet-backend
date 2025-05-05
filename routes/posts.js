@@ -22,9 +22,14 @@ router.post("/post", async function (req, res) {
 });
 router.post("/removePost/:id", async function (req, res) {
   const { id } = req.params;
+  console.log("ID reçu par le backend :", id);
+  const deletedPost = await Post.deleteOne({ _id: id });
 
-  await Post.deleteOne({ _id: id });
-  return res.json({ result: true });
+  if (deletedPost.deletedCount > 0) {
+    return res.json({ result: true });
+  } else {
+    return res.json({ result: false, message: "Post non trouvé" });
+  }
 });
 router.get("/allPosts", async function (req, res) {
   const allPosts = await Post.find({});
