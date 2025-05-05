@@ -26,5 +26,8 @@ router.post("/removePost/:id", async function (req, res) {
   await Post.deleteOne({ _id: id });
   return res.json({ result: true });
 });
-
+router.get("/allPosts", async function (req, res) {
+  const allPosts = await Post.find({});
+  res.json({ allPosts });
+});
 module.exports = router;
